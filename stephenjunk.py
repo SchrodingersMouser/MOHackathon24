@@ -10,8 +10,9 @@ Green_color = '#7BC043'
 
 class TickTackToe():
     
-    def _init_(self):
-        print("your mother")
+    def __init__(self):
+        print("im liable to self harm")
+        self.window = Tk
+        self.canvas = Canvas(self.window, width=size_of_board, height=size_of_board)
     
-    
-
+TickTackToe()
