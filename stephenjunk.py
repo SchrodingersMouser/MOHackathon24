@@ -1,18 +1,11 @@
 from tkinter import *
-import numpy as np
 
-size_of_board = 600
-symbol_size = (size_of_board / 3 - size_of_board / 8) / 2
-symbol_thickness = 50
-symbol_X_color = '#EE4035'
-symbol_O_color = '#0492CF'
-Green_color = '#7BC043'
+urmom = Tk()
 
-class TickTackToe():
-    
-    def __init__(self):
-        print("im liable to self harm")
-        self.window = Tk
-        self.canvas = Canvas(self.window, width=size_of_board, height=size_of_board)
-    
-TickTackToe()
+urmom.geometry("1000x1000")
+canvas = Canvas(urmom, width=600, height=600)
+canvas.pack
+
+canvas.create_line(100,200,200,35, fill="green", width=30)
+
+urmom.mainloop()
