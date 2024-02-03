@@ -2,7 +2,10 @@ import pygame
 import os
 pygame.init()
 
-screen = pygame.display.set_mode((1280,720))
+WINDOW_HEIGHT = 1000
+WINDOW_WIDTH = 1000
+
+screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH))
 
 clock = pygame.time.Clock()
 
@@ -16,7 +19,10 @@ while True:
     # Do logical updates here.
     # ...
 
-    screen.fill("purple")  # Fill the display with a solid color
+    # TODO: Try to make this into an image
+    screen.fill("black")  # Fill the display with a solid color
+
+    pygame.draw.circle(screen, "#8a8a8a", (WINDOW_HEIGHT / 2, WINDOW_WIDTH / 2), 500)
 
     # Render the graphics here.
     # ...
