@@ -26,13 +26,19 @@ class ship(object):
     def update_ship_location(self):
 
         # enforcing velocity
-        if self.s_velocity[0] < 0: self.s_velocity[0] = 0
+        if self.s_velocity[0] < -10: self.s_velocity[0] = -10
         elif self.s_velocity[0] > 30: self.s_velocity[0] = 30
         if self.s_velocity[1] < 0: self.s_velocity[1] = 360
         elif self.s_velocity[1] > 360: self.s_velocity[1] = 1
 
-        self.s_location[0] += 5*self.s_velocity[0] * math.cos(math.degrees(self.s_velocity[1]))
-        self.s_location[1] += 5*self.s_velocity[0] * math.sin(math.degrees(self.s_velocity[1]))
+        # self.s_location[0] += 5*self.s_velocity[0] * math.cos(math.degrees(self.s_location[1]))
+        # self.s_location[1] += 5*self.s_velocity[0] * math.sin(math.degrees(self.s_location[1]))
+
+        x = math.cos(math.degrees(self.s_location[1])) * self.s_velocity[0]
+        y = math.sin(math.degrees(self.s_location[1])) * self.s_velocity[0]
+
+        self.s_location[0] = x
+        self.s_location[1] = y
 
         # #if you go off the screen, you show up on the other side
         if self.s_location[1] < 0: self.s_location[0] = WINDOW_WIDTH
@@ -69,7 +75,7 @@ while True:
         ship_g.s_velocity[0] -= 1
 
     ship_g.update_ship_location()
-    ship_g.ship_icon = pygame.transform.rotate(ship_g.ship_icon, ship_g.s_velocity[1])
+    pygame.transform.rotate(ship_g.ship_icon, ship_g.s_velocity[1])
 
     # TODO: Try to make this into an image
     screen.fill("black")  # Fill the display with a solid color
