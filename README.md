@@ -1,7 +1,15 @@
 # Welcome to our project for the Missouri Hackathon 2024
 
-NOTE: This project is far from finished, replace most "has"s with "is supposed to have"
+>NOTE: This project is far from finished, two player and firing hasn't been set up yet
+##
 
+The most interesting part of this game is the controls. Instead of taking up/down and right/left controls straight from the arrow keys,
+our implementation uses RIGHT/LEFT to control the heading of the ship, and UP/DOWN to control velocity.  
+
+I still haven't gotten the visual rotation to work right, but the spaceship is maneuverable.  
+
+----
+##
 This game, designed using pygame, is a 2-player spaceship game with the intent to shoot the other player's ship down. This game also takes inspiration from the early videogame "Spacewar!"
 
 ## Controls
