@@ -5,8 +5,10 @@ import os
 
 pygame.init()
 
+# Variables used in the window
 WINDOW_HEIGHT = 1000
 WINDOW_WIDTH = 1000
+bg = pygame.image.load("assets/bg.png")
 
 screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH))
 
@@ -59,11 +61,13 @@ class ship(object):
         # this function should modify the ship's location
         # ship orientation should be set based on the ship heading
 
-    def draw(self, surface, rotate):
-        rotated_ship = pygame.transform.rotate(self.ship_icon, rotate)
-        rotated_rect = rotated_ship.get_rect(center = self.ship_icon.get_rect(center = self.s_location).center)
-        surface.blit(rotated_ship, rotated_rect)
+    #this code is attempting to visibly rotate the sprite
+    def draw(self, surface):
+        rotated_ship = pygame.transform.rotozoom(self.ship_icon, self.s_heading, 1)
+        return rotated_ship
 
+
+#in the final game these missiles will fire from the ship on their heading
 class missile(object):
 
     def __init__(self, x, y, asset):
@@ -72,8 +76,17 @@ class missile(object):
         self.ship_icon = pygame.transform.scale(pygame.image.load("assets/redShot.png").convert(), (30, 30))
 
 
+
+class star(object):
+    def __init__(self, x, y, asset):
+        self.location = [x, y]  # star location
+        self.icon = pygame.image.load(asset)  # star icon
+
 ship_g = ship(20, 500, "assets/shipGreen.png")
 vel_reducer = 1
+rotation = 0
+
+star_ = star(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "assets/star.png")
 
 while True:
 
@@ -85,23 +98,31 @@ while True:
 
     # steering with velocity and heading controls are really hard: implemented under here
     pressed_keys = pygame.key.get_pressed()
+
     rotate = (pressed_keys[pygame.K_RIGHT] - pressed_keys[pygame.K_LEFT]) * .5
     ship_g.s_velocity += (pressed_keys[pygame.K_UP] - pressed_keys[pygame.K_DOWN]) * vel_reducer
     ship_g.s_heading += rotate
 
-    print(ship_g.s_velocity)
+    #print(ship_g.s_velocity)
 
     ship_g.update_ship_location()
-
-    pygame.transform.rotate(ship_g.icon, rotate)
 
     # TODO: Try to make this into an image
     screen.fill("black")  # Fill the display with a solid color
 
     pygame.draw.circle(screen, "#8a8a8a", (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500)
-    ship_g.draw(screen, rotate)
-    # Render the graphics here.
-    # ...
+
+    ship_g.update_ship_location()
+
+    rotation += rotate
+    # TODO: Try to make this into an image
+    screen.fill("black")  # Fill the display with a solid color
+    screen.blit(bg, (0, 0))
+
+
+    screen.blit(ship_g.draw(screen), ship_g.s_location)
+
+    screen.blit(star_.icon, star_.location)
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(10)  # wait until next frame (at 60 FPS)
