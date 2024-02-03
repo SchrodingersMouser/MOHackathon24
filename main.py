@@ -5,8 +5,10 @@ import os
 
 pygame.init()
 
+# Variables used in the window
 WINDOW_HEIGHT = 1000
 WINDOW_WIDTH = 1000
+bg = pygame.image.load("assets/bg.png")
 
 screen = pygame.display.set_mode((WINDOW_HEIGHT, WINDOW_WIDTH))
 
@@ -17,7 +19,7 @@ class ship(object):
     def __init__(self, x, y, asset):
         self.s_location = [x, y]  # ship location
         self.s_velocity = 0  # ship speed (0 - 100)
-        self.s_heading = 300  # direction (0 - 360)
+        self.s_heading = 0  # direction (0 - 360)
         # converting the image makes it run faster (supposedly). image is then resized so it looks alright
         self.ship_icon = pygame.transform.scale(pygame.image.load(asset).convert(), (50, 50))
 
@@ -50,8 +52,14 @@ class ship(object):
         # this function should modify the ship's location
         # ship orientation should be set based on the ship heading
 
+ship_g = ship(40, WINDOW_HEIGHT / 2, "assets/shipGreen.png")
 
-ship_g = ship(20, 500, "assets/shipGreen.png")
+class star(object):
+    def __init__(self, x, y, asset):
+        self.location = [x, y] # star location
+        self.icon = pygame.image.load(asset) # star icon
+
+star_ = star(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "assets/star.png")
 
 while True:
 
@@ -65,6 +73,7 @@ while True:
     pressed_keys = pygame.key.get_pressed()
     if pressed_keys[pygame.K_RIGHT]:  # this code should make the ship turn
         ship_g.s_heading += 1
+        ship_g.ship_icon = pygame.transform.rotate(ship_g.ship_icon, 1)
     elif pressed_keys[pygame.K_LEFT]:
         ship_g.s_heading -= 1
     if pressed_keys[pygame.K_UP]:  # this code controls acceleration
@@ -73,14 +82,14 @@ while True:
         ship_g.s_velocity -= 1
 
     ship_g.update_ship_location()
-    pygame.transform.rotate(ship_g.ship_icon, ship_g.s_heading)
+    # pygame.transform.rotate(ship_g.ship_icon, ship_g.s_heading)
 
     # TODO: Try to make this into an image
     screen.fill("black")  # Fill the display with a solid color
-
-    pygame.draw.circle(screen, "#8a8a8a", (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500)
+    screen.blit(bg, (0, 0))
 
     screen.blit(ship_g.ship_icon, ship_g.s_location)
+    screen.blit(star_.icon, star.location)
 
     # Render the graphics here.
     # ...
