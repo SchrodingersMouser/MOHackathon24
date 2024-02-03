@@ -43,6 +43,9 @@ class ship(object):
         # this function should modify the ship's location
         # ship orientation should be set based on the ship heading
 
+class missile(object):
+
+    def __init__(self):
 
 ship_g = ship(20, 500, "assets/shipGreen.png")
 
