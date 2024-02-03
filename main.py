@@ -51,7 +51,11 @@ class ship(object):
 
 class missile(object):
 
-    def __init__(self):
+    def __init__(self, x, y, asset):
+        self.s_location = [x, y]  # ship location
+        # converting the image makes it run faster (supposedly). image is then resized so it looks alright
+        self.ship_icon = pygame.transform.scale(pygame.image.load("assets/redShot.png").convert(), (30, 30))
+
 
 ship_g = ship(20, 500, "assets/shipGreen.png")
 
