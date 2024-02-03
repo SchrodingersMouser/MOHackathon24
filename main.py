@@ -17,9 +17,10 @@ class ship(object):
     def __init__(self, x, y, asset):
         self.s_location = [x, y]  # ship location
         self.s_velocity = 0  # ship speed (0 - 100)
-        self.s_heading = 300  # direction (0 - 360)
+        self.s_heading = 0  # direction (0 - 360)
         # converting the image makes it run faster (supposedly). image is then resized so it looks alright
         self.ship_icon = pygame.transform.scale(pygame.image.load(asset).convert(), (50, 50))
+        self.icon = pygame.Surface((50,50))
 
     # def update_ship_velocity():
     #     #this function should modify the ship's velocity based on user inputs
@@ -27,28 +28,41 @@ class ship(object):
     def update_ship_location(self):
 
         # enforcing velocity
-        if self.s_velocity < -10: self.s_velocity = -10
-        elif self.s_velocity > 30: self.s_velocity = 30
-        if self.s_heading < 0: self.s_heading = 360
-        elif self.s_heading > 360: self.s_heading = 1
+        if self.s_velocity < -10:
+            self.s_velocity = -10
+        elif self.s_velocity > 30:
+            self.s_velocity = 30
+        if self.s_heading < 0:
+            self.s_heading = 30
+        elif self.s_heading > 30:
+            self.s_heading = 1
 
         # self.s_location[0] += 5*self.s_velocity * math.cos(math.degrees(self.s_location[1]))
         # self.s_location[1] += 5*self.s_velocity * math.sin(math.degrees(self.s_location[1]))
 
-        x = math.cos(math.radians(self.s_heading)) * self.s_velocity
-        y = math.sin(math.radians(self.s_heading)) * self.s_velocity
+        deltax = float(math.cos(self.s_heading) * self.s_velocity)
+        deltay = float(math.sin(self.s_heading) * self.s_velocity)
 
-        self.s_location[0] = x
-        self.s_location[1] = y
+        self.s_location[0] += deltax
+        self.s_location[1] += deltay
 
         # #if you go off the screen, you show up on the other side
-        if self.s_location[1] < 0: self.s_location[0] = WINDOW_WIDTH
-        elif self.s_location[1] > WINDOW_WIDTH: self.s_location[0] = 0
-        if self.s_location[0] < 0: self.s_location[1] = WINDOW_HEIGHT
-        elif self.s_location[0] > WINDOW_HEIGHT: self.s_location[1] = 0
+        if self.s_location[0] <= 0:
+            self.s_location[0] = WINDOW_WIDTH-20
+        elif self.s_location[0] >= WINDOW_WIDTH:
+            self.s_location[0] = 20
+        if self.s_location[1] <= 0:
+            self.s_location[1] = WINDOW_HEIGHT-20
+        elif self.s_location[1] >= WINDOW_HEIGHT:
+            self.s_location[1] = 20
 
         # this function should modify the ship's location
         # ship orientation should be set based on the ship heading
+
+    def draw(self, surface, rotate):
+        rotated_ship = pygame.transform.rotate(self.ship_icon, rotate)
+        rotated_rect = rotated_ship.get_rect(center = self.ship_icon.get_rect(center = self.s_location).center)
+        surface.blit(rotated_ship, rotated_rect)
 
 class missile(object):
 
@@ -59,6 +73,7 @@ class missile(object):
 
 
 ship_g = ship(20, 500, "assets/shipGreen.png")
+vel_reducer = 1
 
 while True:
 
@@ -70,25 +85,21 @@ while True:
 
     # steering with velocity and heading controls are really hard: implemented under here
     pressed_keys = pygame.key.get_pressed()
-    if pressed_keys[pygame.K_RIGHT]:  # this code should make the ship turn
-        ship_g.s_heading += 1
-    elif pressed_keys[pygame.K_LEFT]:
-        ship_g.s_heading -= 1
-    if pressed_keys[pygame.K_UP]:  # this code controls acceleration
-        ship_g.s_velocity += 1
-    elif pressed_keys[pygame.K_DOWN]:
-        ship_g.s_velocity -= 1
+    rotate = (pressed_keys[pygame.K_RIGHT] - pressed_keys[pygame.K_LEFT]) * .5
+    ship_g.s_velocity += (pressed_keys[pygame.K_UP] - pressed_keys[pygame.K_DOWN]) * vel_reducer
+    ship_g.s_heading += rotate
+
+    print(ship_g.s_velocity)
 
     ship_g.update_ship_location()
-    pygame.transform.rotate(ship_g.ship_icon, ship_g.s_heading)
+
+    pygame.transform.rotate(ship_g.icon, rotate)
 
     # TODO: Try to make this into an image
     screen.fill("black")  # Fill the display with a solid color
 
     pygame.draw.circle(screen, "#8a8a8a", (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500)
-
-    screen.blit(ship_g.ship_icon, ship_g.s_location)
-
+    ship_g.draw(screen, rotate)
     # Render the graphics here.
     # ...
 
